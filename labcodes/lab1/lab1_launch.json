@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "uCore Lab 1 Debug (QEMU)", 
+            "type": "cppdbg",                  
+            "request": "launch",               
+            "program": "${workspaceFolder}/bin/kernel", 
+            "miDebuggerServerAddress": "localhost:1234",
+            "miDebuggerPath": "i386-elf-gdb",       
+            "cwd": "${workspaceFolder}",         
+            "setupCommands": [                 
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Load gdbinit script (optional but recommended)",
+                    "text": "source tools/gdbinit", 
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Start QEMU for Debugging (Lab 1)" 
+        }
+    ]
+}
