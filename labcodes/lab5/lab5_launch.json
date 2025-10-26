@@ -25,7 +25,7 @@
 
             "program_counter_id": 8, 
             "first_breakpoint_group": "kernel",         
-            "second_breakpoint_group": "${workspaceFolder}/user/sh", // Lab 5 第一个用户程序名是 sh 吗？
+            "second_breakpoint_group": "${workspaceFolder}/user/exit", // Lab 5 第一个用户程序名是 sh 吗？
             "kernel_memory_ranges": [["0xC0000000", "0xFFFFFFFF"]],
             "user_memory_ranges": [["0x00000000", "0xC0000000"]],
 
@@ -55,12 +55,12 @@
             "filePathToBreakpointGroupNames": {
                 "isAsync": false,
                 "functionArguments": "filePathStr",
-                "functionBody": "if (filePathStr.includes('/kern/')) { return ['kernel']; } else if (filePathStr.includes('/user/libs/') || filePathStr.includes('/libs/')) { let userApps = ['exit', 'forktest', 'forktree', 'hello', 'pgdir', 'sh', 'sleep', 'sleepkill', 'spin', 'testbss', 'waitkill', 'yield']; return userApps.map(name => '${workspaceFolder}/user/' + name); } else if (filePathStr.includes('/user/')) { let parts = filePathStr.split('/'); let filename = parts[parts.length - 1].split('.')[0]; return ['${workspaceFolder}/user/' + filename]; } else { return ['kernel']; }" // **确认**: 列出了 Lab 5 所有用户程序名
+                "functionBody": "if (filePathStr.includes('/kern/')) { return ['kernel']; } else if (filePathStr.includes('/user/libs/') || filePathStr.includes('/libs/')) { let userApps = ['badarg', 'divzero', 'exit', 'faultread', 'faultreadkernel', 'forktest', 'forktree', 'hello', 'pgdir', 'yield']; return userApps.map(name => '${workspaceFolder}/user/' + name); } else if (filePathStr.includes('/user/')) { let parts = filePathStr.split('/'); let filename = parts[parts.length - 1].split('.')[0]; return ['${workspaceFolder}/user/' + filename]; } else { return ['kernel']; }"
             },
             "breakpointGroupNameToDebugFilePaths": {
                 "isAsync": false,
                 "functionArguments": "groupName",
-                "functionBody": "if (groupName === 'kernel') { return ['${workspaceFolder}/bin/kernel']; } else if (groupName.startsWith('${workspaceFolder}/user/')) { let parts = groupName.split('/'); let filename = parts[parts.length - 1]; return ['${workspaceFolder}/obj/user/__user_' + filename + '.out']; } else { return []; }" // **确认**: 用户符号文件路径格式
+                "functionBody": "if (groupName === 'kernel') { return ['${workspaceFolder}/bin/kernel']; } else if (groupName.startsWith('${workspaceFolder}/user/')) { let parts = groupName.split('/'); let filename = parts[parts.length - 1]; return ['${workspaceFolder}/obj/user/__user_' + filename + '.out']; } else { return []; }"
             }
         }
     ]
