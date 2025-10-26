@@ -25,7 +25,7 @@
 
             "program_counter_id": 8, 
             "first_breakpoint_group": "kernel",         
-            "second_breakpoint_group": "${workspaceFolder}/user/exit", // Lab 5 第一个用户程序名是 sh 吗？
+            "second_breakpoint_group": "${workspaceFolder}/user/exit",
             "kernel_memory_ranges": [["0xC0000000", "0xFFFFFFFF"]],
             "user_memory_ranges": [["0x00000000", "0xC0000000"]],
 
