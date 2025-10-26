@@ -8,11 +8,25 @@
             "request": "launch",               
             "target": ":1234",                 
             "cwd": "${workspaceFolder}",
-            "gdbpath": "i386-ucore-elf-gdb",   
-            "autorun": [
-                "add-symbol-file ${workspaceFolder}/bin/kernel" 
-            ],
-            "stopAtConnect": true,             
+            "gdbpath": "gdb-multiarch",   
+            "stopAtConnect": true,
+            "setupCommands": [                 
+                {
+                    "description": "Set architecture to i386",
+                    "text": "set architecture i386", 
+                    "ignoreFailures": false 
+                },
+                {
+                    "description": "Load kernel symbols",
+                    "text": "file ${workspaceFolder}/bin/kernel", 
+                    "ignoreFailures": false 
+                },
+                {
+                    "description": "Load gdbinit script (optional)", 
+                    "text": "source tools/gdbinit",
+                    "ignoreFailures": true
+                }
+        ],            
             "qemuPath": "qemu-system-i386",   
             "qemuArgs": [                      
                 "-S",                          
@@ -30,6 +44,7 @@
             "user_memory_ranges": [["0x00000000", "0xC0000000"]],
 
             "border_breakpoints": [
+                {
                     "filepath": "${workspaceFolder}/kern/trap/trap.c", 
                     "line": 289 // trap() 函数开始处
                 },
