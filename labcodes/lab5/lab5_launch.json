@@ -1,0 +1,67 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+           
+            "name": "uCore Lab 5 Debug (OS Debugger)",
+            "type": "gdb",                     
+            "request": "launch",               
+            "target": ":1234",                 
+            "cwd": "${workspaceFolder}",
+            "gdbpath": "i386-ucore-elf-gdb",   
+            "autorun": [
+                "add-symbol-file ${workspaceFolder}/bin/kernel" 
+            ],
+            "stopAtConnect": true,             
+            "qemuPath": "qemu-system-i386",   
+            "qemuArgs": [                      
+                "-S",                          
+                "-parallel", "stdio",
+                "-hda", "${workspaceFolder}/bin/ucore.img",
+                "-drive", "file=${workspaceFolder}/bin/swap.img,media=disk,cache=writeback",
+                "-serial", "null",
+                "-s"                           
+            ],
+
+            "program_counter_id": 8, 
+            "first_breakpoint_group": "kernel",         
+            "second_breakpoint_group": "${workspaceFolder}/user/sh", // Lab 5 第一个用户程序名是 sh 吗？
+            "kernel_memory_ranges": [["0xC0000000", "0xFFFFFFFF"]],
+            "user_memory_ranges": [["0x00000000", "0xC0000000"]],
+
+            "border_breakpoints": [
+                    "filepath": "${workspaceFolder}/kern/trap/trap.c", 
+                    "line": 289 // trap() 函数开始处
+                },
+                {
+                    "filepath": "${workspaceFolder}/kern/trap/trap.c", 
+                    "line": 301 // if (!in_kernel) { ... } 处
+                }
+            ],
+            "hook_breakpoints": [
+                {
+                    "breakpoint": {
+                        "file": "${workspaceFolder}/kern/process/proc.c", 
+                        "line": 587 // memcpy(local_name, name, len); 之后
+                    },
+                    "behavior": {
+                        "isAsync": true,
+                        "functionArguments": "",
+                        "functionBody": "let p = await this.getStringVariable('local_name'); return '${workspaceFolder}/user/' + p;" 
+                    }
+                }
+            ],
+
+            "filePathToBreakpointGroupNames": {
+                "isAsync": false,
+                "functionArguments": "filePathStr",
+                "functionBody": "if (filePathStr.includes('/kern/')) { return ['kernel']; } else if (filePathStr.includes('/user/libs/') || filePathStr.includes('/libs/')) { let userApps = ['exit', 'forktest', 'forktree', 'hello', 'pgdir', 'sh', 'sleep', 'sleepkill', 'spin', 'testbss', 'waitkill', 'yield']; return userApps.map(name => '${workspaceFolder}/user/' + name); } else if (filePathStr.includes('/user/')) { let parts = filePathStr.split('/'); let filename = parts[parts.length - 1].split('.')[0]; return ['${workspaceFolder}/user/' + filename]; } else { return ['kernel']; }" // **确认**: 列出了 Lab 5 所有用户程序名
+            },
+            "breakpointGroupNameToDebugFilePaths": {
+                "isAsync": false,
+                "functionArguments": "groupName",
+                "functionBody": "if (groupName === 'kernel') { return ['${workspaceFolder}/bin/kernel']; } else if (groupName.startsWith('${workspaceFolder}/user/')) { let parts = groupName.split('/'); let filename = parts[parts.length - 1]; return ['${workspaceFolder}/obj/user/__user_' + filename + '.out']; } else { return []; }" // **确认**: 用户符号文件路径格式
+            }
+        }
+    ]
+}
